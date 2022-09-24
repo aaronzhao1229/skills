@@ -124,29 +124,29 @@ function collectCosts(num) {
   costinputs.push(num)
 }
 function roundaboutCostInput() {
-  rl.question('Please input the cost of roundabout: ', function (input) {
+  rl.question('Please input the cost of roundabout (k): ', function (input) {
     collectCosts(input)
     stopSignCostInput()
   })
 }
 
 function stopSignCostInput() {
-  rl.question('Please input the cost of stop sign: ', function (input) {
+  rl.question('Please input the cost of stop sign (k): ', function (input) {
     collectCosts(input)
     trafficLightsCostInput()
   })
 }
 
 function trafficLightsCostInput() {
-  rl.question('Please input the cost of stop sign: ', function (input) {
+  rl.question('Please input the cost of stop sign (k): ', function (input) {
     collectCosts(input)
 
     const cmpNumbers = []
     cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
     const costNumbers = []
-    costinputs.forEach((e) => costNumbers.push(Number(e)))
+    costinputs.forEach((e) => costNumbers.push(Number(e) * 1000))
     checkEfficiency(...cmpNumbers)
-    console.log(costNumbers)
+    console.log('\n the cost of construction methods ($): ' + costNumbers)
     rl.close()
   })
 }
