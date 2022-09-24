@@ -47,13 +47,31 @@ function controlMethod(index) {
   }
 }
 
+// check if one through-road is busy, and the other is quiet
+function roundAboutMoreEffiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) {
+  if (
+    Road1CPM + Road3CPM > (Road2CPM + Road4CPM) * 2 ||
+    Road2CPM + Road4CPM > (Road1CPM + Road3CPM) * 2
+  ) {
+    return true
+  } else {
+    return false
+  }
+}
+
 function checkEfficiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) {
   const totalCMP = Road1CPM + Road2CPM + Road3CPM + Road4CPM
-  const efficiency = [
+
+  let efficiency = [
     roundAboutEfficiencyScore(totalCMP),
     stopSignsEfficiencyScore(totalCMP),
     trafficLightsEfficiencyScore(totalCMP),
   ]
+
+  if (roundAboutMoreEffiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) === true) {
+    efficiency[0] += 10
+  }
+
   for (let i = 0; i < efficiency.length; i++) {
     console.log(
       `\n Efficiency Score for ${controlMethod(i)}: ${efficiency[i]}%`
@@ -96,13 +114,41 @@ function thirdInput() {
 function fouthInput() {
   rl.question('Please input the fourth road CMP: ', function (input) {
     collectCMPs(input)
+    roundaboutCostInput()
+  })
+}
+
+const costinputs = []
+
+function collectCosts(num) {
+  costinputs.push(num)
+}
+function roundaboutCostInput() {
+  rl.question('Please input the cost of roundabout: ', function (input) {
+    collectCosts(input)
+    stopSignCostInput()
+  })
+}
+
+function stopSignCostInput() {
+  rl.question('Please input the cost of stop sign: ', function (input) {
+    collectCosts(input)
+    trafficLightsCostInput()
+  })
+}
+
+function trafficLightsCostInput() {
+  rl.question('Please input the cost of stop sign: ', function (input) {
+    collectCosts(input)
+
     const cmpNumbers = []
     cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
+    const costNumbers = []
+    costinputs.forEach((e) => costNumbers.push(Number(e)))
     checkEfficiency(...cmpNumbers)
+    console.log(costNumbers)
     rl.close()
   })
 }
 
 firstInput()
-
-// checkEfficiency(Road1, Road2, Road3, Road4)
