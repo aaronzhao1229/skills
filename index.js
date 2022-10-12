@@ -1,38 +1,22 @@
 const readline = require('readline')
 
-function roundAboutEfficiencyScore(CMP) {
-  if (CMP >= 0 && CMP < 10) {
-    return 90
-  } else if (CMP >= 10 && CMP < 20) {
-    return 75
-  } else if (CMP >= 20) {
-    return 50
-  } else {
-    return null
+class Efficiency {
+  constructor(CMP, highScore, mediumScore, lowScore) {
+    this.CMP = CMP
+    this.highScore = highScore
+    this.mediumScore = mediumScore
+    this.lowScore = lowScore
   }
-}
-
-function stopSignsEfficiencyScore(CMP) {
-  if (CMP >= 0 && CMP < 10) {
-    return 40
-  } else if (CMP >= 10 && CMP < 20) {
-    return 30
-  } else if (CMP >= 20) {
-    return 20
-  } else {
-    return null
-  }
-}
-
-function trafficLightsEfficiencyScore(CMP) {
-  if (CMP >= 0 && CMP < 10) {
-    return 30
-  } else if (CMP >= 10 && CMP < 20) {
-    return 75
-  } else if (CMP >= 20) {
-    return 90
-  } else {
-    return null
+  efficiencyScore() {
+    if (this.CMP >= 0 && this.CMP < 10) {
+      return this.lowScore
+    } else if (this.CMP >= 10 && this.CMP < 20) {
+      return this.mediumScore
+    } else if (this.CMP >= 20) {
+      return this.highScore
+    } else {
+      return null
+    }
   }
 }
 
@@ -62,10 +46,14 @@ function roundAboutMoreEffiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) {
 function checkEfficiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) {
   const totalCMP = Road1CPM + Road2CPM + Road3CPM + Road4CPM
 
+  // call class
+  let roundAboutEfficiency = new Efficiency(totalCMP, 50, 75, 90)
+  let stopSignsEfficiency = new Efficiency(totalCMP, 20, 30, 40)
+  let trafficLightsEfficiency = new Efficiency(totalCMP, 90, 75, 30)
   let efficiency = [
-    roundAboutEfficiencyScore(totalCMP),
-    stopSignsEfficiencyScore(totalCMP),
-    trafficLightsEfficiencyScore(totalCMP),
+    roundAboutEfficiency.efficiencyScore(),
+    stopSignsEfficiency.efficiencyScore(),
+    trafficLightsEfficiency.efficiencyScore(),
   ]
 
   if (roundAboutMoreEffiency(Road1CPM, Road2CPM, Road3CPM, Road4CPM) === true) {
@@ -137,18 +125,36 @@ function stopSignCostInput() {
   })
 }
 
-function trafficLightsCostInput() {
-  rl.question('Please input the cost of stop sign (k): ', function (input) {
-    collectCosts(input)
+function cpmPerDollar(cmpNumbers, costNumbers) {
+  const totalCMP = cmpNumbers.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    0
+  )
+  const cpmPerDollarValue = []
+  costNumbers.forEach((e) => cpmPerDollarValue.push(totalCMP / e))
 
-    const cmpNumbers = []
-    cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
-    const costNumbers = []
-    costinputs.forEach((e) => costNumbers.push(Number(e) * 1000))
-    checkEfficiency(...cmpNumbers)
-    console.log('\n the cost of construction methods ($): ' + costNumbers)
-    rl.close()
-  })
+  for (let i = 0; i < cpmPerDollarValue.length; i++) {
+    console.log(
+      `\n CPM-per-dollar for ${controlMethod(i)}: ${cpmPerDollarValue[i]}%`
+    )
+  }
+}
+
+function trafficLightsCostInput() {
+  rl.question(
+    'Please input the cost of traffic lights (k): ',
+    function (input) {
+      collectCosts(input)
+
+      const cmpNumbers = []
+      cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
+      const costNumbers = []
+      costinputs.forEach((e) => costNumbers.push(Number(e) * 1000))
+      checkEfficiency(...cmpNumbers)
+      cpmPerDollar(cmpNumbers, costNumbers)
+      rl.close()
+    }
+  )
 }
 
 firstInput()
