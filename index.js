@@ -79,30 +79,38 @@ function collectCMPs(num) {
 }
 
 function firstInput() {
-  rl.question('Please input the first road CMP: ', function (input) {
-    collectCMPs(input)
-    secondInput()
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the first road CMP: ', function (input) {
+      collectCMPs(input)
+      resolve()
+    })
   })
 }
 
 function secondInput() {
-  rl.question('Please input the second road CMP: ', function (input) {
-    collectCMPs(input)
-    thirdInput()
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the second road CMP: ', function (input) {
+      collectCMPs(input)
+      resolve()
+    })
   })
 }
 
 function thirdInput() {
-  rl.question('Please input the third road CMP: ', function (input) {
-    collectCMPs(input)
-    fouthInput()
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the third road CMP: ', function (input) {
+      collectCMPs(input)
+      resolve()
+    })
   })
 }
 
-function fouthInput() {
-  rl.question('Please input the fourth road CMP: ', function (input) {
-    collectCMPs(input)
-    roundaboutCostInput()
+function fourthInput() {
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the fourth road CMP: ', function (input) {
+      collectCMPs(input)
+      resolve()
+    })
   })
 }
 
@@ -111,17 +119,34 @@ const costinputs = []
 function collectCosts(num) {
   costinputs.push(num)
 }
+
 function roundaboutCostInput() {
-  rl.question('Please input the cost of roundabout (k): ', function (input) {
-    collectCosts(input)
-    stopSignCostInput()
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the cost of roundabout (k): ', function (input) {
+      collectCosts(input)
+      resolve()
+    })
   })
 }
 
 function stopSignCostInput() {
-  rl.question('Please input the cost of stop sign (k): ', function (input) {
-    collectCosts(input)
-    trafficLightsCostInput()
+  return new Promise((resolve, reject) => {
+    rl.question('Please input the cost of stop sign (k): ', function (input) {
+      collectCosts(input)
+      resolve()
+    })
+  })
+}
+
+function trafficLightsCostInput() {
+  return new Promise((resolve, reject) => {
+    rl.question(
+      'Please input the cost of traffic lights (k): ',
+      function (input) {
+        collectCosts(input)
+        resolve()
+      }
+    )
   })
 }
 
@@ -140,21 +165,21 @@ function cpmPerDollar(cmpNumbers, costNumbers) {
   }
 }
 
-function trafficLightsCostInput() {
-  rl.question(
-    'Please input the cost of traffic lights (k): ',
-    function (input) {
-      collectCosts(input)
-
-      const cmpNumbers = []
-      cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
-      const costNumbers = []
-      costinputs.forEach((e) => costNumbers.push(Number(e) * 1000))
-      checkEfficiency(...cmpNumbers)
-      cpmPerDollar(cmpNumbers, costNumbers)
-      rl.close()
-    }
-  )
+const main = async () => {
+  await firstInput()
+  await secondInput()
+  await thirdInput()
+  await fourthInput()
+  await roundaboutCostInput()
+  await stopSignCostInput()
+  await trafficLightsCostInput()
+  const cmpNumbers = []
+  cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
+  const costNumbers = []
+  costinputs.forEach((e) => costNumbers.push(Number(e) * 1000))
+  checkEfficiency(...cmpNumbers)
+  cpmPerDollar(cmpNumbers, costNumbers)
+  rl.close()
 }
 
-firstInput()
+main()
