@@ -20,6 +20,22 @@ class Efficiency {
   }
 }
 
+class Input {
+  constructor(string, callback) {
+    this.string = string
+    this.callback = callback
+  }
+
+  getInput(func = this.callback) {
+    return new Promise((resolve, reject) => {
+      rl.question(`Please input ${this.string}: `, function (input) {
+        func(input)
+        resolve()
+      })
+    })
+  }
+}
+
 function controlMethod(index) {
   switch (index) {
     case 0:
@@ -78,77 +94,23 @@ function collectCMPs(num) {
   cmpinputs.push(num)
 }
 
-function firstInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the first road CMP: ', function (input) {
-      collectCMPs(input)
-      resolve()
-    })
-  })
-}
-
-function secondInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the second road CMP: ', function (input) {
-      collectCMPs(input)
-      resolve()
-    })
-  })
-}
-
-function thirdInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the third road CMP: ', function (input) {
-      collectCMPs(input)
-      resolve()
-    })
-  })
-}
-
-function fourthInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the fourth road CMP: ', function (input) {
-      collectCMPs(input)
-      resolve()
-    })
-  })
-}
-
 const costinputs = []
 
 function collectCosts(num) {
   costinputs.push(num)
 }
 
-function roundaboutCostInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the cost of roundabout (k): ', function (input) {
-      collectCosts(input)
-      resolve()
-    })
-  })
-}
-
-function stopSignCostInput() {
-  return new Promise((resolve, reject) => {
-    rl.question('Please input the cost of stop sign (k): ', function (input) {
-      collectCosts(input)
-      resolve()
-    })
-  })
-}
-
-function trafficLightsCostInput() {
-  return new Promise((resolve, reject) => {
-    rl.question(
-      'Please input the cost of traffic lights (k): ',
-      function (input) {
-        collectCosts(input)
-        resolve()
-      }
-    )
-  })
-}
+// call input class
+let firstInput = new Input('the first road CMP', collectCMPs)
+let secondInput = new Input('the second road CMP', collectCMPs)
+let thirdInput = new Input('the third road CMP', collectCMPs)
+let fourthInput = new Input('the fourth road CMP', collectCMPs)
+let roundaboutCostInput = new Input('the cost of roundabout (k)', collectCosts)
+let stopSignCostInput = new Input('the cost of stop sign (k)', collectCosts)
+let trafficLightsCostInput = new Input(
+  'the cost of traffic lights (k)',
+  collectCosts
+)
 
 function cpmPerDollar(cmpNumbers, costNumbers) {
   const totalCMP = cmpNumbers.reduce(
@@ -166,13 +128,13 @@ function cpmPerDollar(cmpNumbers, costNumbers) {
 }
 
 const main = async () => {
-  await firstInput()
-  await secondInput()
-  await thirdInput()
-  await fourthInput()
-  await roundaboutCostInput()
-  await stopSignCostInput()
-  await trafficLightsCostInput()
+  await firstInput.getInput()
+  await secondInput.getInput()
+  await thirdInput.getInput()
+  await fourthInput.getInput()
+  await roundaboutCostInput.getInput()
+  await stopSignCostInput.getInput()
+  await trafficLightsCostInput.getInput()
   const cmpNumbers = []
   cmpinputs.forEach((e) => cmpNumbers.push(Number(e)))
   const costNumbers = []
